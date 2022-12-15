@@ -1,23 +1,31 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
-	"net/http"
+	h "net/http"
 )
 
 func main() {
 
-	f1 := func(w http.ResponseWriter, _ *http.Request) {
+	f1 := func(w h.ResponseWriter, _ *h.Request) {
 		io.WriteString(w, "birinci func \n ")
 	}
 
-	f2 := func(w http.ResponseWriter, _ *http.Request) {
+	f2 := func(w h.ResponseWriter, _ *h.Request) {
 		io.WriteString(w, "ikinci func \n ")
 	}
 
-	http.HandleFunc("/", f1)
-	http.HandleFunc("/f2", f2)
+	h.HandleFunc("/", f1)
+	h.HandleFunc("/f2", f2)
+	h.HandleFunc("/f3", f3)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(h.ListenAndServe(":8081", nil))
+}
+
+func f3(w h.ResponseWriter, r *h.Request) {
+	// io.WriteString(w, "3 func")
+	fmt.Printf("r.Method: %v\n", r.Method)
+	io.WriteString(w, r.RequestURI)
 }
